@@ -19,9 +19,12 @@ export default {
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
-  text-align: left; /* Change to left to avoid centering inline elements */
+  text-align: left;
   color: #2c3e50;
-  margin-top: 0; /* Remove or reduce top margin */
-  display: block; /* Ensure it’s a block-level container */
+  margin: 0; /* Remove default margins */
+  display: block;
+  height: 100vh; /* Set height to the full viewport height */
+  box-sizing: border-box; /* Ensure padding/border are included in the height */
+  overflow: hidden; /* Prevent overflow if content exceeds the screen */
 }
 </style>

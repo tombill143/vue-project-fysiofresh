@@ -1,9 +1,17 @@
 <template>
   <div class="kanban-board">
+    <!-- Heading -->
+    <h1 class="main-heading">My Todos for This Week</h1>
+
     <!-- Outer draggable for columns -->
     <draggable v-model="columns" group="columns" class="kanban-columns">
       <template #item="{ element }">
-        <div class="kanban-column" :key="element.id">
+        <div
+          class="kanban-column"
+          :key="element.id"
+          @dragenter="showPlaceholder(element.id)"
+          @dragleave="hidePlaceholder"
+        >
           <h2 class="column-title">{{ element.title }}</h2>
 
           <!-- Inner draggable for tasks -->
@@ -13,6 +21,8 @@
             class="kanban-cards"
             :animation="200"
             :ghost-class="'ghost'"
+            @start="handleDragStart"
+            @end="handleDragEnd"
           >
             <template #item="{ element: task }">
               <div class="kanban-card" :key="task.id">
@@ -20,6 +30,12 @@
               </div>
             </template>
           </draggable>
+
+          <!-- Placeholder -->
+          <div
+            v-if="activePlaceholder === element.id"
+            class="drop-placeholder"
+          ></div>
         </div>
       </template>
     </draggable>
@@ -27,14 +43,15 @@
 </template>
 
 <script>
-import draggable from 'vuedraggable'; // Import VueDraggable
+import draggable from 'vuedraggable'; // Import vuedraggable
 
 export default {
   components: {
-    draggable, // Register draggable as a local component
+    draggable,
   },
   data() {
     return {
+      activePlaceholder: null, // Tracks the currently active placeholder
       columns: [
         {
           id: 1,
@@ -57,11 +74,37 @@ export default {
       ],
     };
   },
+  methods: {
+    showPlaceholder(columnId) {
+      this.activePlaceholder = columnId;
+    },
+    hidePlaceholder() {
+      this.activePlaceholder = null;
+    },
+    handleDragStart(evt) {
+      console.log('Drag started:', evt);
+      this.activePlaceholder = null; // Reset placeholder
+    },
+    handleDragEnd(evt) {
+      console.log('Drag ended:', evt);
+      this.activePlaceholder = null; // Ensure placeholder is cleared
+    },
+  },
 };
 </script>
 
 <style scoped>
 /* Styling for the Kanban board */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  color: darkslategrey;
+}
 .kanban-board {
   display: flex;
   flex-wrap: wrap; /* Allow columns to wrap into rows */
@@ -95,6 +138,33 @@ export default {
   text-align: center;
   border-radius: 4px;
   margin-bottom: 15px;
+  cursor: pointer;
+}
+
+.kanban-card {
+  border: 1px solid grey; /* Adds the 1px grey border */
+  border-radius: 4px; /* Optional: makes the edges slightly rounded */
+  padding: 10px; /* Adds some spacing inside the card */
+  margin-bottom: 10px; /* Adds space between cards */
+  background-color: white; /* Ensures a clean white background */
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1); /* Optional: subtle shadow for depth */
+  text-align: center;
+  margin: 1em;
+  cursor: pointer;
+}
+
+.main-heading {
+  text-align: center;
+  padding: 2em;
+}
+
+.drop-placeholder {
+  height: 50px;
+  background-color: darkgrey; /* Light blue background */
+  border: 2px dotted blanchedalmond; /* Dashed border */
+  border-radius: 4px;
+  margin: 1em;
+  transition: opacity 0.2s ease-in-out;
 }
 
 /* Mobile responsive adjustments */
