@@ -1,15 +1,17 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Welcome to Your Vue.js App" />
+  <v-app>
+    <KanbanBoard />
+  </v-app>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
+// Corrected the import statement with double quotes and removed unwanted characters
+import KanbanBoard from './components/KanbanBoard.vue';
 
 export default {
-  name: "App",
+  name: 'App', // Double quotes for consistency
   components: {
-    HelloWorld,
+    KanbanBoard, // Comma added to separate components
   },
 };
 </script>
@@ -17,10 +19,9 @@ export default {
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+  text-align: left; /* Change to left to avoid centering inline elements */
   color: #2c3e50;
-  margin-top: 60px;
+  margin-top: 0; /* Remove or reduce top margin */
+  display: block; /* Ensure it’s a block-level container */
 }
 </style>
