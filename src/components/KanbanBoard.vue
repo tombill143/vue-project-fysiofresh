@@ -4,7 +4,12 @@
     <h1 class="main-heading">My Todos for This Week</h1>
 
     <!-- Outer draggable for columns -->
-    <draggable v-model="columns" group="columns" class="kanban-columns">
+    <draggable
+      v-model="columns"
+      group="columns"
+      class="kanban-columns"
+      :item-key="'id'"
+    >
       <template #item="{ element }">
         <div
           class="kanban-column"
@@ -23,6 +28,7 @@
             :ghost-class="'ghost'"
             @start="handleDragStart"
             @end="handleDragEnd"
+            :item-key="'id'"
           >
             <template #item="{ element: task }">
               <div class="kanban-card" :key="task.id">
@@ -44,6 +50,7 @@
 
 <script>
 import draggable from 'vuedraggable'; // Import vuedraggable
+import { supabase } from './supabase'; // Import Supabase client
 
 export default {
   components: {
@@ -52,42 +59,55 @@ export default {
   data() {
     return {
       activePlaceholder: null, // Tracks the currently active placeholder
-      columns: [
-        {
-          id: 1,
-          title: 'To Do',
-          items: [
-            { id: 1, text: 'Task 1' },
-            { id: 2, text: 'Task 2' },
-          ],
-        },
-        {
-          id: 2,
-          title: 'In Progress',
-          items: [{ id: 3, text: 'Task 3' }],
-        },
-        {
-          id: 3,
-          title: 'Done',
-          items: [{ id: 4, text: 'Task 4' }],
-        },
-      ],
+      columns: [], // Columns are fetched dynamically
     };
   },
+  mounted() {
+    this.fetchData(); // Fetch data from Supabase when the component is mounted
+  },
   methods: {
+    async fetchData() {
+      try {
+        // Fetch Columns from Supabase
+        const { data: columns, error } = await supabase
+          .from('columns')
+          .select('*');
+        if (error) throw error;
+
+        console.log('Columns fetched:', columns);
+
+        // Fetch Tasks from Supabase
+        const { data: tasks, error: tasksError } = await supabase
+          .from('tasks')
+          .select('*');
+        if (tasksError) throw tasksError;
+
+        console.log('Tasks fetched:', tasks);
+
+        // Map tasks to columns based on column_id
+        this.columns = columns.map((column) => ({
+          ...column,
+          items: tasks.filter((task) => task.column_id === column.id),
+        }));
+
+        console.log('Mapped columns:', this.columns);
+      } catch (err) {
+        console.error('Error fetching data:', err);
+      }
+    },
     showPlaceholder(columnId) {
-      this.activePlaceholder = columnId;
+      this.activePlaceholder = columnId; // Show placeholder on drag enter
     },
     hidePlaceholder() {
-      this.activePlaceholder = null;
+      this.activePlaceholder = null; // Hide placeholder on drag leave
     },
     handleDragStart(evt) {
       console.log('Drag started:', evt);
-      this.activePlaceholder = null; // Reset placeholder
+      this.activePlaceholder = null; // Reset placeholder on drag start
     },
     handleDragEnd(evt) {
       console.log('Drag ended:', evt);
-      this.activePlaceholder = null; // Ensure placeholder is cleared
+      this.activePlaceholder = null; // Ensure placeholder is cleared after drag ends
     },
   },
 };

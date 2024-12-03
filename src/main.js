@@ -1,8 +1,17 @@
 import { createApp } from 'vue';
 import App from './App.vue';
-import Vuetify from 'vuetify';
-import 'vuetify/styles';
+import { createVuetify } from 'vuetify';
+import 'vuetify/styles'; // Import Vuetify styles
+import { VApp } from 'vuetify/components'; // Explicitly import VApp
 
 const app = createApp(App);
-app.use(Vuetify);
+
+// Create Vuetify instance
+const vuetify = createVuetify({
+  components: {
+    VApp, // I need to Register the v-app component here
+  },
+});
+
+app.use(vuetify); // Use Vuetify instance
 app.mount('#app');
