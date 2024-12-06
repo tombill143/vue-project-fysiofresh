@@ -234,7 +234,7 @@ footer {
   margin: 0px auto;
   background-color: #fffcf4;
   padding: 5rem;
-  padding-bottom: 26rem;
+  padding-bottom: 2rem;
 }
 
 .kanban-column {
