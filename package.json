@@ -15,6 +15,7 @@
     "path-browserify": "^1.0.1",
     "util": "^0.12.5",
     "vue": "^3.2.13",
+    "vue-router": "^4.0.13",
     "vuedraggable": "^4.1.0",
     "vuetify": "^3.7.0-beta.1",
     "webpack": "^5.96.1",

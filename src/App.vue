@@ -1,18 +1,13 @@
 <template>
   <v-app>
-    <KanbanBoard />
+    <!-- This is where the routed components (like KanbanBoard, AddTodo, etc.) will be shown -->
+    <router-view></router-view>
   </v-app>
 </template>
 
 <script>
-// Corrected the import statement with double quotes and removed unwanted characters
-import KanbanBoard from './components/KanbanBoard.vue';
-
 export default {
-  name: 'App', // Double quotes for consistency
-  components: {
-    KanbanBoard, // Comma added to separate components
-  },
+  name: 'App',
 };
 </script>
 
